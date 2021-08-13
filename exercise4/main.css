@@ -4,6 +4,7 @@
   --brd-normal: 1px solid rgb(0 0 0 / 15%);
   --brd-rad: 8px;
 
+  --clr-finished: rgb(209, 194, 169);
   --clr-sand: rgb(250, 226, 187);
   --clr-smoke: rgb(224, 220, 212);
   --clr-smoke-hvr: rgb(201, 194, 180);
@@ -118,6 +119,11 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+.task__view--finished {
+  text-decoration: line-through;
+  background-color: var(--clr-finished);
 }
 
 /* ****************** BUTTON ****************** */
