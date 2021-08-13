@@ -4,20 +4,21 @@ const inpSearchTask = document.querySelector(".form__input--search-task");
 const btnAddTask = document.querySelector(".btn--add-task");
 const btnClearTaskList = document.querySelector(".btn--clear-task-list");
 
-const taskArray = [];
 let taskList = document.querySelector(".list");
+const taskArray = [];
 
 const addTask = (e) => {
   e.preventDefault();
 
   const newTask = renderTask();
-  console.log(newTask);
+
   if (newTask !== undefined) {
     taskArray.push(newTask);
     renderTaskList();
 
     inpNewTask.value = "";
     newTask.querySelector(".btn--finish-task").addEventListener("click", finishTask);
+    newTask.querySelector(".btn--delete-task").addEventListener("click", deleteTask);
   }
 };
 
@@ -27,10 +28,9 @@ const renderTask = () => {
   if (taskText === "") {
     alert("Type a task content first.");
   } else {
-    let taskNumber = taskArray.length + 1;
     const task = document.createElement("li");
     task.classList.add("task", "list__item");
-    task.innerHTML = `<span class="task-number task__view">#${taskNumber}</span>
+    task.innerHTML = `<span class="task-number task__view"></span>
   <div class="task-content task__view">
   <p class="task-content__text">${taskText}</p>
   <div class="task-content__btn-container">
@@ -45,9 +45,10 @@ const renderTask = () => {
 
 const renderTaskList = () => {
   taskList.textContent = "";
-  console.log(taskArray);
+
   taskArray.forEach((taskArrayEl, key) => {
     taskArrayEl.dataset.key = key;
+    taskArrayEl.querySelector(".task-number").textContent = `#${key + 1}`;
     taskList.appendChild(taskArrayEl);
   });
 };
@@ -80,5 +81,23 @@ const finishTask = (e) => {
   }
 };
 
+const deleteTask = (e) => {
+  const taskIndex = e.target.parentNode.parentNode.parentNode.dataset.key;
+
+  taskArray.splice(taskIndex, 1);
+
+  renderTaskList();
+};
+
+const searchTask = (e) => {
+  const searchText = e.target.value.toLowerCase();
+  let searchedTaskArray = taskArray.filter((li) =>
+    li.textContent.toLowerCase().includes(searchText)
+  );
+  taskList.textContent = "";
+  searchedTaskArray.forEach((li) => taskList.appendChild(li));
+};
+
 formNewTask.addEventListener("submit", addTask);
 btnClearTaskList.addEventListener("click", clearTaskList);
+inpSearchTask.addEventListener("input", searchTask);
