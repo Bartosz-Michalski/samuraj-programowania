@@ -11,31 +11,26 @@
     <header class="page__header">To Do List</header>
     <section class="wrapper-top page__wrapper">
       <form class="form wrapper-top__form" action="">
-        <label class="form__label">Type a task to do</label>
-        <input class="form__input form__input--new-task" type="text" />
+        <label class="form__label" for="new-task">Type a task to do</label>
+        <input id="new-task" class="form__input form__input--new-task" type="text" />
         <div class="form__btn-container">
           <button class="btn form__btn btn--add-task">Add Task</button>
-          <button class="btn form__btn btn--clear-task-list">Clear Task List</button>
+          <button class="btn form__btn btn--clear-task-list" type="button">
+            Clear Task List
+          </button>
         </div>
       </form>
       <form class="form wrapper-top__form" action="">
-        <label class="form__label">Search for a task</label>
-        <input class="form__input form__input--search-task" type="text" />
+        <label for="search-task" class="form__label">Search for a task</label>
+        <input
+          id="search-task"
+          class="form__input form__input--search-task"
+          type="text"
+        />
       </form>
     </section>
     <section class="wrapper-bottom page__wrapper">
-      <ul class="list wrapper-bottom__list">
-        <li class="task list__item">
-          <span class="task-number task__view">#1</span>
-          <div class="task-content task__view">
-            <p class="task-content__text">Example task</p>
-            <div class="task-content__btn-container">
-              <button class="btn task-content__btn btn--finish-task">Done</button>
-              <button class="btn task-content__btn btn--delete-task">x</button>
-            </div>
-          </div>
-        </li>
-      </ul>
+      <ul class="list wrapper-bottom__list"></ul>
     </section>
     <script src="main.js"></script>
   </body>
