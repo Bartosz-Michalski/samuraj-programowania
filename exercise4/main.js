@@ -1,8 +1,4 @@
-const formNewTask = document.querySelector(".wrapper-top__form");
-const inpNewTask = document.querySelector(".form__input--new-task");
-const inpSearchTask = document.querySelector(".form__input--search-task");
-const btnAddTask = document.querySelector(".btn--add-task");
-const btnClearTaskList = document.querySelector(".btn--clear-task-list");
+const get = (...args) => document.querySelector(...args);
 
 let taskList = document.querySelector(".list");
 const taskArray = [];
