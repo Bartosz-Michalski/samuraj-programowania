@@ -114,7 +114,7 @@
   font-size: 13px;
 }
 
-.task-content {
+.task-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -131,7 +131,7 @@
 .btn {
   width: auto;
   height: 30px;
-  margin-top: 8px;
+  margin: 8px 0 0 5px;
   border: var(--brd-normal);
   border-radius: var(--brd-rad);
   box-shadow: var(--shw-small);
