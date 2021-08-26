@@ -9,15 +9,12 @@ const btnClearTaskList = get(".btn--clear-task-list");
 const taskList = get(".list");
 
 const activeTasks = [];
-const finishedTasks = [];
-const deletedTasks = [];
 
 const newElement = (tagName, classNames, text, children = []) => {
   const element = document.createElement(tagName);
   classNames.forEach((className) => element.classList.add(className));
   element.textContent = text;
   children.forEach((child) => element.appendChild(child));
-  console.log(tagName, classNames, text, children);
 
   return element;
 };
@@ -69,26 +66,21 @@ const clearTaskList = (e) => {
 };
 
 const finishTask = (e) => {
-  const taskState = {
-    finished: "Mark as unfinished",
-    unfinished: "Mark as finished",
-  };
-
   const taskView = e.target.parentNode.parentNode.parentNode.querySelectorAll(".task__view");
 
   switch (e.target.textContent) {
-    case taskState.unfinished:
+    case "Mark as finished":
       taskView.forEach((view) => {
         view.classList.add("task__view--finished");
       });
-      e.target.textContent = taskState.finished;
+      e.target.textContent = "Mark as unfinished";
       break;
 
-    case taskState.finished:
+    case "Mark as unfinished":
       taskView.forEach((view) => {
         view.classList.remove("task__view--finished");
       });
-      e.target.textContent = taskState.unfinished;
+      e.target.textContent = "Mark as finished";
       break;
   }
 };
