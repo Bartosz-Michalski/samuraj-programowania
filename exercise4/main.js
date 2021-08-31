@@ -5,10 +5,21 @@ const inpNewTask = get(".form__input--new-task");
 const inpSearchTask = get(".form__input--search-task");
 const btnAddTask = get(".btn--add-task");
 const btnClearTaskList = get(".btn--clear-task-list");
+const deleteBtns = document.getElementsByClassName("btn--delete-task");
+
+const unfinishedTab = get(".wrapper-middle__tab--unfinished");
+const finishedTab = get(".wrapper-middle__tab--finished");
 
 const taskList = get(".list");
 
-const activeTasks = [];
+/* ********** ********** APP STATES ********** ********** */
+
+const taskArray = {
+  unfinished: [],
+  finished: [],
+};
+
+/* ********** ********** FUNCTIONS - HELPERS ********** ********** */
 
 const newElement = (tagName, classNames, text, children = []) => {
   const element = document.createElement(tagName);
@@ -34,25 +45,42 @@ const renderTask = () => {
   return task;
 };
 
-const renderTaskList = () => {
+const renderTaskList = (taskArrayType) => {
   taskList.textContent = "";
 
-  activeTasks.forEach((activeTasksEl, key) => {
-    activeTasksEl.dataset.key = key;
-    activeTasksEl.querySelector(".task-number").textContent = `#${key + 1}`;
-    taskList.appendChild(activeTasksEl);
+  taskArrayType.forEach((task, key) => {
+    task.dataset.key = key;
+    task.querySelector(".task-number").textContent = `#${key + 1}`;
+    taskList.appendChild(task);
   });
 };
+
+const switchTab = (e, listToRender) => {
+  const currentTab = e.target;
+  const active = "wrapper-middle__tab--active";
+  const isCurrentTabActive = currentTab.classList.contains(active);
+
+  if (!isCurrentTabActive) {
+    unfinishedTab.classList.toggle(active);
+    finishedTab.classList.toggle(active);
+    renderTaskList(listToRender);
+  } else {
+    return;
+  }
+};
+
+/* ********** ********** FUNCTIONS - ACTIONS ********** ********** */
 
 const addTask = (e) => {
   e.preventDefault();
 
   const newTask = renderTask();
   if (newTask !== undefined) {
-    activeTasks.push(newTask);
-    renderTaskList();
+    taskArray.unfinished.push(newTask);
+    renderTaskList(taskArray.unfinished);
 
     inpNewTask.value = "";
+    // Wynieść na zewnątrz do EVENT LISTENERS
     newTask.querySelector(".btn--finish-task").addEventListener("click", finishTask);
     newTask.querySelector(".btn--delete-task").addEventListener("click", deleteTask);
   }
@@ -60,46 +88,106 @@ const addTask = (e) => {
 
 const clearTaskList = (e) => {
   e.preventDefault();
-  inpNewTask.value = "";
+  const activeTab = get(".wrapper-middle__tab--active");
+
   taskList.textContent = "";
-  activeTasks.length = 0;
+  inpNewTask.value = "";
+  activeTab.textContent.toLowerCase() === "unfinished" ? (taskArray.unfinished.length = 0) : (taskArray.finished.length = 0);
 };
 
 const finishTask = (e) => {
-  const taskView = e.target.parentNode.parentNode.parentNode.querySelectorAll(".task__view");
+  const currentFinishBtn = e.target;
 
-  switch (e.target.textContent) {
-    case "Mark as finished":
-      taskView.forEach((view) => {
-        view.classList.add("task__view--finished");
-      });
-      e.target.textContent = "Mark as unfinished";
+  const task = currentFinishBtn.parentElement.parentElement.parentElement;
+  const taskView = task.querySelectorAll(".task__view");
+  const taskIndex = task.dataset.key;
+
+  const btnTextPrefix = "Mark as";
+  const btnText = {
+    finished: `${btnTextPrefix} finished`,
+    unfinished: `${btnTextPrefix} unfinished`,
+  };
+
+  const activeTab = get(".wrapper-middle__tab--active");
+
+  // ZAMIANA WIDOKU - Wynieść na zewnątrz do HELPERS
+  const toggleView = () => {
+    taskView.forEach((view) => {
+      view.classList.toggle("task__view--finished");
+    });
+  };
+
+  switch (currentFinishBtn.textContent) {
+    case btnText.finished:
+      currentFinishBtn.textContent = btnText.unfinished;
+      toggleView();
+
+      const cutUnfinishedTask = taskArray.unfinished.splice(taskIndex, 1);
+      taskArray.finished.push(cutUnfinishedTask[0]);
+
+      if (activeTab.textContent.toLowerCase() === "unfinished") {
+        renderTaskList(taskArray.unfinished);
+      }
       break;
 
-    case "Mark as unfinished":
-      taskView.forEach((view) => {
-        view.classList.remove("task__view--finished");
-      });
-      e.target.textContent = "Mark as finished";
+    case btnText.unfinished:
+      currentFinishBtn.textContent = btnText.finished;
+      toggleView();
+
+      const cutFinishedTask = taskArray.finished.splice(taskIndex, 1);
+      taskArray.unfinished.push(cutFinishedTask[0]);
+
+      if (activeTab.textContent.toLowerCase() === "finished") {
+        renderTaskList(taskArray.finished);
+      }
       break;
   }
 };
 
 const deleteTask = (e) => {
-  const taskIndex = e.target.parentNode.parentNode.parentNode.dataset.key;
+  const task = e.target.parentNode.parentNode.parentNode;
+  const taskIndex = task.dataset.key;
+  const activeTab = get(".wrapper-middle__tab--active");
 
-  activeTasks.splice(taskIndex, 1);
-
-  renderTaskList();
+  if (activeTab.textContent.toLowerCase() === "unfinished") {
+    taskArray.unfinished.splice(taskIndex, 1);
+    renderTaskList(taskArray.unfinished);
+  } else if (activeTab.textContent.toLowerCase() === "finished") {
+    taskArray.finished.splice(taskIndex, 1);
+    renderTaskList(taskArray.finished);
+  }
 };
 
 const searchTask = (e) => {
+  // Jak zatrzymać działanie inputa, jeżeli wciskamy enter
+  e.preventDefault();
+
   const searchText = e.target.value.toLowerCase();
-  let searchedTaskArray = activeTasks.filter((li) => li.textContent.toLowerCase().includes(searchText));
-  taskList.textContent = "";
-  searchedTaskArray.forEach((li) => taskList.appendChild(li));
+  const activeTab = get(".wrapper-middle__tab--active");
+
+  if (activeTab.textContent.toLowerCase() === "unfinished") {
+    let searchedUnfinishedTaskArray = taskArray.unfinished.filter((li) => li.textContent.toLowerCase().includes(searchText));
+
+    taskList.textContent = "";
+    searchedUnfinishedTaskArray.forEach((li) => taskList.appendChild(li));
+  } else if (activeTab.textContent.toLowerCase() === "finished") {
+    let searchedFinishedTaskArray = taskArray.finished.filter((li) => li.textContent.toLowerCase().includes(searchText));
+
+    taskList.textContent = "";
+    searchedFinishedTaskArray.forEach((li) => taskList.appendChild(li));
+  }
 };
+
+/* ********** ********** EVENT LISTENERS ********** ********** */
 
 formNewTask.addEventListener("submit", addTask);
 btnClearTaskList.addEventListener("click", clearTaskList);
 inpSearchTask.addEventListener("input", searchTask);
+
+unfinishedTab.addEventListener("click", (e) => {
+  switchTab(e, taskArray.unfinished);
+});
+
+finishedTab.addEventListener("click", (e) => {
+  switchTab(e, taskArray.finished);
+});
