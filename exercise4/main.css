@@ -50,6 +50,20 @@
   background-color: var(--clr-sand);
 }
 
+.wrapper-middle {
+  display: flex;
+}
+
+.wrapper-middle__tab {
+  margin-right: 5px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.wrapper-middle__tab--active {
+  background-color: var(--clr-smoke);
+}
+
 .wrapper-bottom {
   min-height: 300px;
   background-color: var(--clr-smoke);
