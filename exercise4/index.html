@@ -15,19 +15,17 @@
         <input id="new-task" class="form__input form__input--new-task" type="text" />
         <div class="form__btn-container">
           <button class="btn form__btn btn--add-task">Add Task</button>
-          <button class="btn form__btn btn--clear-task-list" type="button">
-            Clear Task List
-          </button>
+          <button class="btn form__btn btn--clear-task-list" type="button">Clear Task List</button>
         </div>
       </form>
       <form class="form wrapper-top__form" action="">
         <label for="search-task" class="form__label">Search for a task</label>
-        <input
-          id="search-task"
-          class="form__input form__input--search-task"
-          type="text"
-        />
+        <input id="search-task" class="form__input form__input--search-task" type="text" />
       </form>
+    </section>
+    <section class="wrapper-middle page__wraper">
+      <div class="wrapper-middle__tab wrapper-middle__tab--unfinished wrapper-middle__tab--active">Unfinished</div>
+      <div class="wrapper-middle__tab wrapper-middle__tab--finished">Finished</div>
     </section>
     <section class="wrapper-bottom page__wrapper">
       <ul class="list wrapper-bottom__list"></ul>
