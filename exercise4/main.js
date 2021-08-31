@@ -69,17 +69,27 @@ const switchTab = (e, listToRender) => {
   }
 };
 
+const toggleView = (taskView) => {
+  taskView.forEach((view) => {
+    view.classList.toggle("task__view--finished");
+  });
+};
+
 /* ********** ********** FUNCTIONS - ACTIONS ********** ********** */
 
 const addTask = (e) => {
   e.preventDefault();
 
+  const activeTab = get(".wrapper-middle__tab--active");
   const newTask = renderTask();
+
   if (newTask !== undefined) {
     taskArray.unfinished.push(newTask);
     renderTaskList(taskArray.unfinished);
-
     inpNewTask.value = "";
+
+    activeTab.textContent.toLowerCase() === "finished" && switchTab(e, taskArray.unfinished);
+
     // Wynieść na zewnątrz do EVENT LISTENERS
     newTask.querySelector(".btn--finish-task").addEventListener("click", finishTask);
     newTask.querySelector(".btn--delete-task").addEventListener("click", deleteTask);
@@ -97,7 +107,6 @@ const clearTaskList = (e) => {
 
 const finishTask = (e) => {
   const currentFinishBtn = e.target;
-
   const task = currentFinishBtn.parentElement.parentElement.parentElement;
   const taskView = task.querySelectorAll(".task__view");
   const taskIndex = task.dataset.key;
@@ -110,17 +119,10 @@ const finishTask = (e) => {
 
   const activeTab = get(".wrapper-middle__tab--active");
 
-  // ZAMIANA WIDOKU - Wynieść na zewnątrz do HELPERS
-  const toggleView = () => {
-    taskView.forEach((view) => {
-      view.classList.toggle("task__view--finished");
-    });
-  };
-
   switch (currentFinishBtn.textContent) {
     case btnText.finished:
       currentFinishBtn.textContent = btnText.unfinished;
-      toggleView();
+      toggleView(taskView);
 
       const cutUnfinishedTask = taskArray.unfinished.splice(taskIndex, 1);
       taskArray.finished.push(cutUnfinishedTask[0]);
@@ -132,7 +134,7 @@ const finishTask = (e) => {
 
     case btnText.unfinished:
       currentFinishBtn.textContent = btnText.finished;
-      toggleView();
+      toggleView(taskView);
 
       const cutFinishedTask = taskArray.finished.splice(taskIndex, 1);
       taskArray.unfinished.push(cutFinishedTask[0]);
