@@ -55,9 +55,20 @@
 }
 
 .wrapper-middle__tab {
+  min-width: 94px;
   margin-right: 5px;
-  border: 1px solid black;
+  border: var(--brd-light);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 2px 0 3px rgb(0 0 0 / 15%);
+  padding: 7px 10px;
+  font-size: 13px;
+  text-align: center;
   cursor: pointer;
+}
+
+.wrapper-middle__tab:hover {
+  background-color: var(--clr-smoke-hvr);
 }
 
 .wrapper-middle__tab--active {
@@ -66,6 +77,7 @@
 
 .wrapper-bottom {
   min-height: 300px;
+  border-top-left-radius: 0;
   background-color: var(--clr-smoke);
 }
 
